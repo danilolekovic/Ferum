@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{704FA70C-424A-410D-B7ED-4264CA9D0FE0}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Ferum</RootNamespace>
+    <AssemblyName>Ferum</AssemblyName>
+    <Description>The Ferum Programming Language</Description>
+    <StartupObject>Ferum.MainClass</StartupObject>
+    <ReleaseVersion>1.0.0</ReleaseVersion>
+    <newfilesearch>OnLoad</newfilesearch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Externalconsole>true</Externalconsole>
+    <PlatformTarget>x86</PlatformTarget>
+    <Commandlineparameters>example.fe</Commandlineparameters>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Externalconsole>true</Externalconsole>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <Private>False</Private>
+      <Package>glib-sharp-2.0</Package>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Lexical\Token.cs" />
+    <Compile Include="Lexical\TokenType.cs" />
+    <Compile Include="Lexical\Lexer.cs" />
+    <Compile Include="AST\Expression.cs" />
+    <Compile Include="Parsing\Parser.cs" />
+    <Compile Include="Parsing\StatementParser.cs" />
+    <Compile Include="Parsing\LiteralParser.cs" />
+    <Compile Include="Generation\CodeGenerator.cs" />
+    <Compile Include="Generation\VariableStack.cs" />
+    <Compile Include="Generation\Variable.cs" />
+    <Compile Include="AST\BuildIn\Print.cs" />
+    <Compile Include="AST\Newline.cs" />
+    <Compile Include="AST\Literals\Identifier.cs" />
+    <Compile Include="AST\Literals\Literal.cs" />
+    <Compile Include="AST\Literals\Number.cs" />
+    <Compile Include="AST\Literals\String.cs" />
+    <Compile Include="AST\Variable Declarations\VarDeclaration.cs" />
+    <Compile Include="AST\Literals\Bool.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Lexical\" />
+    <Folder Include="AST\" />
+    <Folder Include="Parsing\" />
+    <Folder Include="Generation\" />
+    <Folder Include="AST\BuildIn\" />
+    <Folder Include="AST\Variable Declarations\" />
+    <Folder Include="AST\Literals\" />
+  </ItemGroup>
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <MonoDevelop.Autotools.MakefileInfo RelativeMakefileName="Makefile" ExecuteTargetName="run" SyncReferences="True">
+          <BuildFilesVar Sync="True" Name="FILES" />
+          <DeployFilesVar />
+          <ResourcesVar Sync="True" Name="RESOURCES" />
+          <OthersVar />
+          <GacRefVar Sync="True" Name="REFERENCES" />
+          <AsmRefVar Sync="True" Name="REFERENCES" />
+          <ProjectRefVar Sync="True" Name="REFERENCES" />
+        </MonoDevelop.Autotools.MakefileInfo>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+</Project>

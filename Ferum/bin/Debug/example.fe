@@ -1,0 +1,5 @@
+# Example Project #
+
+var name = "Danilo"
+
+print name
