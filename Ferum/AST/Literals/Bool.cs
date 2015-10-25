@@ -51,6 +51,15 @@ namespace Ferum
 		public override void codeGen(ILGenerator generator)
 		{
 		}
+
+		public override void visit(ILGenerator ilg)
+		{
+			if (value) {
+				ilg.Emit(OpCodes.Brtrue);
+			} else {
+				ilg.Emit(OpCodes.Brfalse);
+			}
+		}
 	}
 }
 

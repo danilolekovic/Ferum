@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 
 namespace Ferum
 {
@@ -33,7 +34,20 @@ namespace Ferum
 		public Literal parseNumber()
 		{
 			var number = int.Parse(this.nextToken().value);
-			return new Number(number);
+			string op = null;
+			BinaryOp right = new BinaryOp(new Number(number), "+", new Number(0));
+
+			while (this.checkTokens(new List<TokenType>() { TokenType.ADD, TokenType.SUB, TokenType.DIV, TokenType.MUL })) {
+				op = this.nextToken().value;
+				this.skipNewline();
+				right = new BinaryOp(right, op, new Number(int.Parse(this.nextToken().value)));
+			}
+
+			if (op == null) {
+				return new Number(number);
+			} else {
+				return right;
+			}
 		}
 
 		public Literal parseIdentifier()

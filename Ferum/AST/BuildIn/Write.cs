@@ -1,5 +1,5 @@
 //
-// String.cs
+// Write.cs
 //
 // Author:
 //       Danilo Lekovic <danilo@lekovic.ca)
@@ -23,38 +23,52 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
 using System;
 using System.Reflection.Emit;
 
+
 namespace Ferum
 {
-	public class Str : Literal
+	public class Write : Expression
 	{
-		public Str(string value)
+		public Write(Literal toWrite)
 		{
-			this.value = value;
+			this.toWrite = toWrite;
 		}
 
-		public string value { get; set; }
-
-		public override object val()
-		{
-			return value;
-		}
-
-		public override LiteralType type()
-		{
-			return LiteralType.STRING;
-		}
+		public Literal toWrite { get; set; }
 
 		public override void codeGen(ILGenerator generator)
 		{
-		}
+			if (toWrite is Identifier) {
+				bool emitted = false;
 
-		public override void visit(ILGenerator ilg)
-		{
-			ilg.Emit(OpCodes.Ldstr, value);
+				foreach (Variable v in VariableStack.variables) {	
+					if (v.name.Trim() == toWrite.val().ToString().Trim()) {
+						if (v.value.type() == LiteralType.IDENT || v.value.type() == LiteralType.STRING) {
+
+							v.value.visit(generator);
+							generator.Emit(OpCodes.Call, typeof(Console).GetMethod("Write", new Type[] { typeof(string) }));
+
+							emitted = true;
+							break;
+						} else {
+							throw new Exception("The function 'write' expects an argument that is a string.");	
+						}
+					}
+				}
+
+				if (!emitted) {
+					throw new Exception("Undefined variable : " + toWrite.val());
+				}
+			} else {
+				if (toWrite is Str) {
+					toWrite.visit(generator);
+					generator.Emit(OpCodes.Call, typeof(Console).GetMethod("Write", new Type[] { typeof(Type) }));
+				} else {
+					throw new Exception("The function 'write' expects an argument that is a string; instead of a string, " + toWrite.GetType() + " was found.");				
+				}
+			}
 		}
 	}
 }

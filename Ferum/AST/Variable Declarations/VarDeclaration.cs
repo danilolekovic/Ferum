@@ -48,23 +48,17 @@ namespace Ferum
 		{
 			if (value is Number) {
 				LocalBuilder a = generator.DeclareLocal(typeof(Int32));
-				generator.Emit(OpCodes.Ldc_I4, (int)value.val());
+				value.visit(generator);
 				generator.Emit(OpCodes.Stloc, a);
 				variable = a;
 			} else if (value is Str) {
 				LocalBuilder a = generator.DeclareLocal(typeof(String));
-				generator.Emit(OpCodes.Ldstr, value.val().ToString());
+				value.visit(generator);
 				generator.Emit(OpCodes.Stloc, a);
 				variable = a;
 			} else if (value is Bool) {
 				LocalBuilder a = generator.DeclareLocal(typeof(Boolean));
-
-				if ((bool)value.val() == true) {
-					generator.Emit(OpCodes.Brtrue);
-				} else {
-					generator.Emit(OpCodes.Brfalse);
-				}
-
+				value.visit(generator);
 				generator.Emit(OpCodes.Stloc, a);
 				variable = a;
 			} else if (value is Identifier) {
@@ -72,21 +66,15 @@ namespace Ferum
 					if ((string)value.val() == v.name) {
 						if (v.value is Number) {
 							LocalBuilder a = v.lb;
-							generator.Emit(OpCodes.Ldc_I4, (int)v.value.val());
+							v.value.visit(generator);
 							generator.Emit(OpCodes.Stloc, a);
 						} else if (v.value is Str) {
 							LocalBuilder a = v.lb;
-							generator.Emit(OpCodes.Ldstr, (string)v.value.val());
+							v.value.visit(generator);
 							generator.Emit(OpCodes.Stloc, a);
 						} else if (v.value is Bool) {
 							LocalBuilder a = v.lb;
-
-							if ((bool)v.value.val() == true) {
-								generator.Emit(OpCodes.Brtrue);
-							} else {
-								generator.Emit(OpCodes.Brfalse);
-							}
-
+							v.value.visit(generator);
 							generator.Emit(OpCodes.Stloc, a);
 						} else if (v.value is Identifier) {
 							// todo: fix this

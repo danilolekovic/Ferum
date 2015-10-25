@@ -57,6 +57,16 @@ namespace Ferum
 			return lexer.peekToken().type == t;
 		}
 
+		public bool checkTokens(List<TokenType> tokens)
+		{
+			foreach (TokenType tt in tokens) {
+				if (checkToken(tt))
+					return true;
+			}
+
+			return false;
+		}
+
 		public Token peekSpecific(int i)
 		{
 			return lexer.peekSpecific(i);

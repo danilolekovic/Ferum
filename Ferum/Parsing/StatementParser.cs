@@ -80,6 +80,18 @@ namespace Ferum
 				}
 
 				return new Print(toPrint);
+			} else if (identifier == "write") {
+				this.skipNewline();
+				var toPrint = this.parseLiteral();
+
+				if (this.checkToken(TokenType.NEWLINE)) {
+					this.nextToken();
+					this.skipNewline();
+				} else {
+					throw new Exception("Expected a newline");
+				}
+
+				return new Write(toPrint);
 			} else {
 				throw new Exception("Unknown statement: " + identifier);
 			}

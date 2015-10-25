@@ -45,7 +45,11 @@ namespace Ferum
 
 				foreach (Variable v in VariableStack.variables) {	
 					if (v.name.Trim() == toPrint.val().ToString().Trim()) {
-						generator.EmitWriteLine(v.lb);
+						if (v.lb != null) {
+							generator.EmitWriteLine(v.lb);
+						} else {
+							generator.EmitWriteLine(v.value.val().ToString());
+						}
 						emitted = true;
 						break;
 					}
@@ -55,7 +59,7 @@ namespace Ferum
 					throw new Exception("Undefined variable : " + toPrint.val());
 				}
 			} else {
-				if (toPrint is Number || toPrint is Str || toPrint is Bool) {
+				if (toPrint is Number || toPrint is Str || toPrint is Bool || toPrint is BinaryOp) {
 					generator.EmitWriteLine(toPrint.val().ToString());
 				} else {
 					throw new Exception("Illegal argument in 'print' function! typeof: " + toPrint.GetType());				

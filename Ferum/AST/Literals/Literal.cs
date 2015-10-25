@@ -25,13 +25,14 @@
 // THE SOFTWARE.
 
 using System;
+using System.Reflection.Emit;
 
 namespace Ferum
 {
 	public abstract class Literal : Expression
 	{
 		public abstract object val();
-
+		public abstract void visit(ILGenerator ilg);
 		public abstract LiteralType type();
 	}
 

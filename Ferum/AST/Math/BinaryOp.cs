@@ -1,5 +1,5 @@
 //
-// String.cs
+// BinaryOp.cs
 //
 // Author:
 //       Danilo Lekovic <danilo@lekovic.ca)
@@ -23,29 +23,42 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
 using System;
 using System.Reflection.Emit;
+using System.Data;
 
 namespace Ferum
 {
-	public class Str : Literal
-	{
-		public Str(string value)
-		{
-			this.value = value;
-		}
+    public class BinaryOp : Literal
+    {
+        public BinaryOp(Literal left, string op, Literal right)
+        {
+			this.left = (int)left.val();
+			this.op = op;
+			this.right = (int)right.val();
+        }
 
-		public string value { get; set; }
+		public int left { get; set; }
+		public string op { get; set; }
+		public int right { get; set; }
 
 		public override object val()
 		{
-			return value;
+			return Evaluate(left + op + right);
+		}
+
+		public int Evaluate(string expression) {
+			using (var loDataTable = new DataTable()) {
+				var loDataColumn = new DataColumn("Eval", typeof(double), expression);
+				loDataTable.Columns.Add(loDataColumn);
+				loDataTable.Rows.Add(0);
+				return (int)((double)loDataTable.Rows[0]["Eval"]);
+			}
 		}
 
 		public override LiteralType type()
 		{
-			return LiteralType.STRING;
+			return LiteralType.INT;
 		}
 
 		public override void codeGen(ILGenerator generator)
@@ -54,8 +67,27 @@ namespace Ferum
 
 		public override void visit(ILGenerator ilg)
 		{
-			ilg.Emit(OpCodes.Ldstr, value);
+			ilg.Emit(OpCodes.Ldc_I4, left);
+
+			switch (op) {
+				case "+":
+					ilg.Emit(OpCodes.Add);
+					break;
+				case "-":
+					ilg.Emit(OpCodes.Sub);
+					break;
+				case "*":
+					ilg.Emit(OpCodes.Mul);
+					break;
+				case "/":
+					ilg.Emit(OpCodes.Div);
+					break;
+				default:
+					throw new Exception("Unknown mathematical operator: " + op);
+			}
+
+			ilg.Emit(OpCodes.Ldc_I4, right);
 		}
-	}
+    }
 }
 
